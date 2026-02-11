@@ -35,6 +35,60 @@ phase3:
     enabled: false
     context_file: .mcp/context.json
 
+phase4:
+  enabled: true
+  auto_sync_docs: true
+  mr_title_prefix: "[Agent]"
+  issue_title_prefix: "[Agent][Tracking]"
+  comment_on_source_event: true
+
+phase5:
+  enabled: true
+  audit:
+    enabled: true
+    log_file: .project-os-agent/audit.log.jsonl
+    redact_keys:
+      - token
+      - authorization
+      - private_token
+      - api_key
+      - secret
+    max_entry_chars: 2000
+  guardrails:
+    enabled: true
+    safe_write: true
+    allowed_write_paths: []
+    blocked_path_prefixes:
+      - .git/
+      - .env
+      - secrets/
+      - .mcp/secrets/
+    secret_patterns:
+      - "(?i)glpat-[A-Za-z0-9\\-_]{16,}"
+      - "(?i)AIza[0-9A-Za-z\\-_]{35}"
+      - "(?i)(api[_-]?key|token|secret)\\s*[:=]\\s*[\\\"']?[A-Za-z0-9_\\-]{12,}"
+    max_payload_bytes: 524288
+  rate_limit:
+    enabled: true
+    state_file: .project-os-agent/rate-limit.json
+    window_seconds: 60
+    max_events: 30
+  kpi:
+    enabled: true
+    report_dir: .project-os-agent/reports
+    report_prefix: weekly-kpi
+    rolling_days: 7
+
+gitlab:
+  enabled: false
+  api_url: https://gitlab.com/api/v4
+  project_id: your-group/your-project
+  token_env: GITLAB_TOKEN
+  target_branch: main
+  branch_prefix: project-os-agent
+  labels:
+    - project-os-agent
+
 managed_files:
   - template: AGENTS.md
     target: AGENTS.md

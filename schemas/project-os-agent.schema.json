@@ -134,6 +134,222 @@
         }
       }
     },
+    "phase4": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "auto_sync_docs": {
+          "type": "boolean",
+          "default": true
+        },
+        "mr_title_prefix": {
+          "type": "string",
+          "minLength": 1,
+          "default": "[Agent]"
+        },
+        "issue_title_prefix": {
+          "type": "string",
+          "minLength": 1,
+          "default": "[Agent][Tracking]"
+        },
+        "comment_on_source_event": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "phase5": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "audit": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "log_file": {
+              "type": "string",
+              "minLength": 1,
+              "default": ".project-os-agent/audit.log.jsonl"
+            },
+            "redact_keys": {
+              "type": "array",
+              "default": [
+                "token",
+                "authorization",
+                "private_token",
+                "api_key",
+                "secret"
+              ],
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "max_entry_chars": {
+              "type": "integer",
+              "minimum": 256,
+              "default": 2000
+            }
+          }
+        },
+        "guardrails": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "safe_write": {
+              "type": "boolean",
+              "default": true
+            },
+            "allowed_write_paths": {
+              "type": "array",
+              "default": [],
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "blocked_path_prefixes": {
+              "type": "array",
+              "default": [
+                ".git/",
+                ".env",
+                "secrets/",
+                ".mcp/secrets/"
+              ],
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "secret_patterns": {
+              "type": "array",
+              "default": [
+                "(?i)glpat-[A-Za-z0-9\\\\-_]{16,}",
+                "(?i)AIza[0-9A-Za-z\\\\-_]{35}",
+                "(?i)(api[_-]?key|token|secret)\\\\s*[:=]\\\\s*[\\\\\"']?[A-Za-z0-9_\\\\-]{12,}"
+              ],
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "max_payload_bytes": {
+              "type": "integer",
+              "minimum": 1024,
+              "default": 524288
+            }
+          }
+        },
+        "rate_limit": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "state_file": {
+              "type": "string",
+              "minLength": 1,
+              "default": ".project-os-agent/rate-limit.json"
+            },
+            "window_seconds": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 60
+            },
+            "max_events": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 30
+            }
+          }
+        },
+        "kpi": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "report_dir": {
+              "type": "string",
+              "minLength": 1,
+              "default": ".project-os-agent/reports"
+            },
+            "report_prefix": {
+              "type": "string",
+              "minLength": 1,
+              "default": "weekly-kpi"
+            },
+            "rolling_days": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 7
+            }
+          }
+        }
+      }
+    },
+    "gitlab": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "api_url": {
+          "type": "string",
+          "minLength": 1,
+          "default": "https://gitlab.com/api/v4"
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "token_env": {
+          "type": "string",
+          "minLength": 1,
+          "default": "GITLAB_TOKEN"
+        },
+        "target_branch": {
+          "type": "string",
+          "minLength": 1,
+          "default": "main"
+        },
+        "branch_prefix": {
+          "type": "string",
+          "minLength": 1,
+          "default": "project-os-agent"
+        },
+        "labels": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
     "managed_files": {
       "type": "array",
       "default": [],

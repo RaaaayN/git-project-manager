@@ -276,17 +276,17 @@ Regle :
 
 ### Phase 4 - GitLab actor
 
-- [ ] Generer branches techniques par action
-- [ ] Ouvrir MR automatiques avec template de justification
-- [ ] Creer/metre a jour issues de suivi
-- [ ] Publier commentaires explicatifs relies aux preuves
+- [x] Generer branches techniques par action
+- [x] Ouvrir MR automatiques avec template de justification
+- [x] Creer/metre a jour issues de suivi
+- [x] Publier commentaires explicatifs relies aux preuves
 
 ### Phase 5 - Reliability & governance
 
-- [ ] Ajouter journaux d'audit d'action agent
-- [ ] Ajouter guardrails securite et rate limiting
-- [ ] Ajouter tests de non-regression sur fichiers templates
-- [ ] Mesurer les KPIs et produire rapport hebdomadaire
+- [x] Ajouter journaux d'audit d'action agent
+- [x] Ajouter guardrails securite et rate limiting
+- [x] Ajouter tests de non-regression sur fichiers templates
+- [x] Mesurer les KPIs et produire rapport hebdomadaire
 
 ---
 
