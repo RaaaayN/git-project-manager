@@ -1,0 +1,16 @@
+{
+  "owners_by_action": {
+    "open_merge_request": "@tech-lead",
+    "update_documentation": "@docs-team",
+    "create_issue": "@devops-team",
+    "comment_issue": "@triage-bot",
+    "write_adr": "@architecture-team"
+  },
+  "priority_overrides": {
+    "create_issue": "P0",
+    "write_adr": "P1"
+  },
+  "depends_on": {
+    "write_adr": "update_documentation"
+  }
+}

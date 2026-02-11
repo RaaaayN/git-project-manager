@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://project-os-agent.local/schemas/project-os-agent.schema.json",
+  "title": "Project OS Agent Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "templates_dir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dry_run": {
+      "type": "boolean",
+      "default": true
+    },
+    "webhook": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "host": {
+          "type": "string",
+          "minLength": 1,
+          "default": "0.0.0.0"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 8080
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "default": "/webhooks/gitlab"
+        },
+        "secret_env": {
+          "type": "string",
+          "minLength": 1,
+          "default": "GITLAB_WEBHOOK_SECRET"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed_actions": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "phase3": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stale_days": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 14
+        },
+        "next_steps_default_owner": {
+          "type": "string",
+          "minLength": 1,
+          "default": "@team-core"
+        },
+        "llm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "provider": {
+              "type": "string",
+              "enum": [
+                "gemini"
+              ],
+              "default": "gemini"
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1,
+              "default": "gemini-2.0-flash"
+            },
+            "api_key_env": {
+              "type": "string",
+              "minLength": 1,
+              "default": "GEMINI_API_KEY"
+            },
+            "timeout_seconds": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 120,
+              "default": 20
+            }
+          }
+        },
+        "mcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "context_file": {
+              "type": "string",
+              "minLength": 1,
+              "default": ".mcp/context.json"
+            }
+          }
+        }
+      }
+    },
+    "managed_files": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "template": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "template"
+        ]
+      }
+    },
+    "placeholders": {
+      "type": "object",
+      "default": {},
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "version",
+    "templates_dir"
+  ]
+}

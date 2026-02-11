@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=schemas/project-os-agent.schema.json
+version: 1
+templates_dir: templates
+dry_run: true
+
+webhook:
+  enabled: true
+  host: 0.0.0.0
+  port: 8080
+  path: /webhooks/gitlab
+  secret_env: GITLAB_WEBHOOK_SECRET
+
+policy:
+  allowed_actions:
+    - open_merge_request
+    - create_issue
+    - comment_issue
+    - update_documentation
+    - write_adr
+  forbidden_actions:
+    - delete_file
+    - direct_code_modification
+    - modify_architecture_without_docs
+
+phase3:
+  stale_days: 14
+  next_steps_default_owner: "@team-core"
+  llm:
+    enabled: false
+    provider: gemini
+    model: gemini-2.0-flash
+    api_key_env: GEMINI_API_KEY
+    timeout_seconds: 20
+  mcp:
+    enabled: false
+    context_file: .mcp/context.json
+
+managed_files:
+  - template: AGENTS.md
+    target: AGENTS.md
+  - template: API_SPEC.md
+    target: API_SPEC.md
+  - template: ARCHITECTURE.md
+    target: ARCHITECTURE.md
+  - template: CLAUDE.md
+    target: CLAUDE.md
+  - template: DECISIONS.md
+    target: DECISIONS.md
+  - template: DOCUMENTATION.md
+    target: DOCUMENTATION.md
+  - template: PRODUCT_SPEC.md
+    target: PRODUCT_SPEC.md
+  - template: PROJECT_STATUS.md
+    target: PROJECT_STATUS.md
+  - template: README.md
+    target: README.md
+  - template: ROADMAP.md
+    target: ROADMAP.md
+  - template: SECURITY.md
+    target: SECURITY.md
+
+placeholders:
+  "<SaaS Product Name>": "Project OS Agent"
+  "<repo-url>": "https://gitlab.com/your-group/your-project"
