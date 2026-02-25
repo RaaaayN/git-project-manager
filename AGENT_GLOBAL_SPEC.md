@@ -249,6 +249,12 @@ Regle :
 - reduction des issues bloquees
 - stabilite CI (series de pipelines verts)
 
+### 10.1 Exposition CLI des KPIs et diagnostics
+
+- commande `report-kpis` pour produire un rapport Markdown de KPIs
+- commande `diagnose` pour produire un diagnostic global de la configuration et des artefacts
+- commande `dry-run-global` pour executer un scenario de preview complet (bootstrap + event + KPIs) sans write GitLab
+
 ---
 
 ## 11. Backlog d'implementation (taches concretes)

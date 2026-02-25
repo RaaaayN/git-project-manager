@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .audit import log_audit_event, read_audit_events
+from .cli_validation import resolve_since_days
 from .config import AgentConfig, _is_within, load_config, safe_text
 from .guardrails import assert_content_is_safe, assert_write_targets_allowed
 
@@ -267,9 +268,7 @@ def run_report_kpis(args: argparse.Namespace) -> int:
     config = load_config(config_path)
     repo_root = config_path.parent.resolve()
 
-    since_days = args.since_days or config.phase5.kpi.rolling_days
-    if since_days < 1:
-        raise ValueError("since-days must be >= 1")
+    since_days = resolve_since_days(args.since_days, config.phase5.kpi.rolling_days)
 
     started = datetime.now(timezone.utc)
     metrics, report_markdown, report_relpath = generate_kpi_report(

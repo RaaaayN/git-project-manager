@@ -17,7 +17,7 @@ Project OS Agent is a Python CLI tool and webhook server for AI-driven GitLab pr
 python -m unittest discover -s tests -v
 ```
 
-Or run specific suites, for example: `python -m unittest tests.test_template_regression tests.test_pipeline tests.test_kpi -v`
+Or run specific suites, for example: `python -m unittest tests.test_template_regression tests.test_pipeline tests.test_kpi tests.test_guardrails tests.test_cli tests.test_diagnose tests.test_workflows -v`
 
 ### Running the CLI
 
@@ -25,12 +25,20 @@ All commands are invoked from the repo root via `python tools/project_os_agent.p
 
 | Command | Example |
 |---------|---------|
-| `bootstrap` | `python3 tools/project_os_agent.py bootstrap --dry-run` |
-| `process-event` | `python3 tools/project_os_agent.py process-event --payload-json '{...}'` |
-| `sync-docs` | `python3 tools/project_os_agent.py sync-docs --payload-json '{...}'` |
-| `act` | `python3 tools/project_os_agent.py act --payload-json '{...}'` |
-| `serve-webhook` | `python3 tools/project_os_agent.py serve-webhook --port 8080` |
-| `report-kpis` | `python3 tools/project_os_agent.py report-kpis --stdout-only` |
+| `bootstrap` | `python tools/project_os_agent.py bootstrap --dry-run` |
+| `process-event` | `python tools/project_os_agent.py process-event --payload-json '{...}'` |
+| `sync-docs` | `python tools/project_os_agent.py sync-docs --payload-json '{...}'` |
+| `act` | `python tools/project_os_agent.py act --payload-json '{...}'` |
+| `serve-webhook` | `python tools/project_os_agent.py serve-webhook --port 8080` |
+| `report-kpis` | `python tools/project_os_agent.py report-kpis --stdout-only` |
+| `diagnose` | `python tools/project_os_agent.py diagnose --stdout-only` |
+| `dry-run-global` | `python tools/project_os_agent.py dry-run-global --payload-json '{...}' --no-kpi-markdown` |
+
+### CLI command notes
+
+- `diagnose` generates a Markdown health report for config, managed docs, audit log, and GitLab settings.
+- `dry-run-global` executes a safe preview pipeline (`bootstrap` + event analysis + KPI report generation) without GitLab writes; payload via `--payload-json` or `--payload-file`, or stdin if omitted.
+- `report-kpis --since-days <n>` requires `n >= 1`.
 
 ### Running the webhook server
 

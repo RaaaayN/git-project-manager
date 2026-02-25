@@ -5,6 +5,7 @@ import argparse
 import sys
 
 from project_os_agent_lib.actor import run_act
+from project_os_agent_lib.diagnose import run_diagnose
 from project_os_agent_lib.kpi import run_report_kpis
 from project_os_agent_lib.pipeline import (
     run_bootstrap,
@@ -12,6 +13,7 @@ from project_os_agent_lib.pipeline import (
     run_serve_webhook,
     run_sync_docs,
 )
+from project_os_agent_lib.workflows import run_dry_run_global
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -22,6 +24,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "act",
         "serve-webhook",
         "report-kpis",
+        "diagnose",
+        "dry-run-global",
     }
     normalized_argv = list(argv)
     if not normalized_argv:
@@ -213,6 +217,59 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Print report only without writing a file.",
     )
 
+    diagnose = subparsers.add_parser(
+        "diagnose",
+        help="Inspect config/repository health and produce a diagnostics markdown report.",
+    )
+    diagnose.add_argument(
+        "--config",
+        default=".project-os-agent.yml",
+        help="Path to the agent YAML config.",
+    )
+    diagnose.add_argument(
+        "--output",
+        help="Output markdown file path relative to repo root.",
+    )
+    diagnose.add_argument(
+        "--stdout-only",
+        action="store_true",
+        help="Print diagnostics report only without writing a file.",
+    )
+
+    dry_run_global = subparsers.add_parser(
+        "dry-run-global",
+        help="Run bootstrap + event analysis + KPI generation in dry-run mode.",
+    )
+    dry_run_global.add_argument(
+        "--config",
+        default=".project-os-agent.yml",
+        help="Path to the agent YAML config.",
+    )
+    dry_run_global.add_argument(
+        "--event-name",
+        default="",
+        help='GitLab event name from header (for example "Merge Request Hook").',
+    )
+    dry_run_payload_group = dry_run_global.add_mutually_exclusive_group()
+    dry_run_payload_group.add_argument(
+        "--payload-file",
+        help="Read JSON payload from file.",
+    )
+    dry_run_payload_group.add_argument(
+        "--payload-json",
+        help="Read JSON payload from a command-line string.",
+    )
+    dry_run_global.add_argument(
+        "--since-days",
+        type=int,
+        help="Rolling period in days used for KPI dry-run report.",
+    )
+    dry_run_global.add_argument(
+        "--no-kpi-markdown",
+        action="store_true",
+        help="Hide KPI markdown block and print JSON summary only.",
+    )
+
     return parser.parse_args(normalized_argv)
 
 
@@ -233,6 +290,10 @@ def main(argv: list[str]) -> int:
             return run_serve_webhook(args)
         if command == "report-kpis":
             return run_report_kpis(args)
+        if command == "diagnose":
+            return run_diagnose(args)
+        if command == "dry-run-global":
+            return run_dry_run_global(args)
         raise ValueError(f"Unsupported command: {command}")
     except Exception as exc:  # noqa: BLE001
         print(f"[project-os-agent] ERROR: {exc}", file=sys.stderr)

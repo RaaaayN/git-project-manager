@@ -16,6 +16,7 @@ from urllib import request as urlrequest
 from urllib.parse import urlparse
 
 from .audit import log_audit_event
+from .cli_validation import resolve_webhook_settings
 from .config import (
     CRITICAL_DOCS,
     ActionResult,
@@ -1459,11 +1460,12 @@ def run_serve_webhook(args: argparse.Namespace) -> int:
     config = load_config(config_path)
     repo_root = config_path.parent.resolve()
 
-    host = args.host or config.webhook.host
-    port = args.port or config.webhook.port
-    path = args.path or config.webhook.path
-    if not path.startswith("/"):
-        path = f"/{path}"
+    host, port, path = resolve_webhook_settings(
+        config.webhook,
+        host_override=args.host,
+        port_override=args.port,
+        path_override=args.path,
+    )
 
     if not config.webhook.enabled:
         print(
