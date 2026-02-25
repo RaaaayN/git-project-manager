@@ -9,19 +9,19 @@ Project OS Agent is a Python CLI tool and webhook server for AI-driven GitLab pr
 ### Dependencies
 
 - **Python 3.10+** (system Python 3.12 works)
-- **PyYAML** — the only external dependency (`pip install pyyaml`); already present in the system packages
-
-No `requirements.txt` or `pyproject.toml` exists; PyYAML is the sole pip dependency.
+- **PyYAML** — the only external dependency; install via `pip install -r requirements.txt` or `pip install pyyaml`
 
 ### Running tests
 
 ```
-python3 -m unittest tests.test_template_regression -v
+python -m unittest discover -s tests -v
 ```
+
+Or run specific suites, for example: `python -m unittest tests.test_template_regression tests.test_pipeline tests.test_kpi -v`
 
 ### Running the CLI
 
-All commands are invoked from the repo root via `python3 tools/project_os_agent.py <command>`:
+All commands are invoked from the repo root via `python tools/project_os_agent.py <command>`:
 
 | Command | Example |
 |---------|---------|
@@ -35,7 +35,7 @@ All commands are invoked from the repo root via `python3 tools/project_os_agent.
 ### Running the webhook server
 
 ```
-python3 tools/project_os_agent.py serve-webhook --port 8080
+python tools/project_os_agent.py serve-webhook --port 8080
 ```
 
 Use `--once` flag for single-request testing. The server listens on `/webhooks/gitlab` by default.
